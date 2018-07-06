@@ -19,7 +19,7 @@ There are two ways to perform validations:
 
 **Chain Methods**
 
-Use chain methods if you want to perform one-time validations.
+Use chain methods if you want to perform validations with at most one rule per field.
 
 ```php
 use Validator\Validator;
@@ -39,7 +39,7 @@ $is_valid = (new Validator())
 
 **Pipe Format (preferred)**
 
-Use can use pipe formatting the same way you do in Laravel. This is the preferred method of performing validations.
+Use can use pipe formatting the same way you do in Laravel if you want to perform multiple validations on a field. This is the preferred method of performing validations and looks better most of the time.
 
 ```php
 use Validator\Validator;
@@ -142,3 +142,7 @@ $validator->getErrors();
 //     'date'     => ['The date field is not a valid date.']
 // ]
 ```
+
+## Available Rules
+
+Coming soon.
