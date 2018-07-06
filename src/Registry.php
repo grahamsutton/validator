@@ -13,12 +13,11 @@ class Registry
 {
     public static $validations = [
         'required'  => \Validator\Validations\Required::class,
-        // 'max'       => App_Validator_Validation_MaxLength::class,
-        // 'min'       => App_Validator_Validation_MinLength::class,
-        // 'boolean'   => App_Validator_Validation_Boolean::class,
-        // 'numeric'   => App_Validator_Validation_Numeric::class,
-        // 'email'     => App_Validator_Validation_Email::class,
-        // 'key'       => App_Validator_Validation_EntityKey::class,
-        // 'date'      => App_Validator_Validation_Date::class,
+        'max'       => \Validator\Validations\MaxLength::class,
+        'min'       => \Validator\Validations\MinLength::class,
+        'boolean'   => \Validator\Validations\Boolean::class,
+        'numeric'   => \Validator\Validations\Numeric::class,
+        'email'     => \Validator\Validations\Email::class,
+        'date'      => \Validator\Validations\Date::class,
     ];
 }
