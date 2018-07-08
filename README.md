@@ -5,7 +5,7 @@ The validator is a simple PHP validation library to remove the hassle of creatin
 This library is intended to be lightweight (no dependencies!) and easy-to-use.
 
 Requirements:
-* >= PHP 7
+* PHP 7+
 
 To install, run the following in your project root:
 
@@ -145,4 +145,206 @@ $validator->getErrors();
 
 ## Available Rules
 
-Coming soon.
+### required
+
+Validates that value is not empty and the field is present.
+
+```php
+use Validator\Validator;
+
+$is_valid = (new Validator)
+    ->required('field_name', 'value')
+    ->validate();
+```
+
+or
+
+```php
+use Validator\Validator;
+
+$validator = new Validator([
+    'field_name' => 'required'
+]);
+
+$is_valid = $validator->validate([
+    'field_name' => 'value'
+]);
+```
+
+Default error message: `The {field_name} field is required.`
+
+### max:*int*
+
+Determines the max value or string length that a field can have.
+
+If the value provided is an integer, the validation will compare that the provided integer is less than or equal to the specified *int* value.
+
+If the value provided is a string, the validation will compare that the value's string length (determined by PHP's *strlen* function) is less than or equal to the specified *int* value.
+
+```php
+use Validator\Validator;
+
+$is_valid = (new Validator)
+    ->max('field_name', 'value', $max = 8)
+    ->validate();
+```
+
+or
+
+```php
+use Validator\Validator;
+
+$validator = new Validator([
+    'field_name' => 'max:8'
+]);
+
+$is_valid = $validator->validate([
+    'field_name' => 'value'
+]);
+```
+
+Default error message: `The {field_name} field must be less than or equal to {int} characters.`
+
+### min:*int*
+
+Determines the minimum value or string length that a field can have.
+
+If the value provided is an integer, the validation will compare that the provided integer is greater than or equal to the specified *int* value.
+
+If the value provided is a string, the validation will compare that the value's string length (determined by PHP's *strlen* function) is greater than or equal to the specified *int* value.
+
+```php
+use Validator\Validator;
+
+$is_valid = (new Validator)
+    ->min('field_name', 'value', $min = 3)
+    ->validate();
+```
+
+or
+
+```php
+use Validator\Validator;
+
+$validator = new Validator([
+    'field_name' => 'min:3'
+]);
+
+$is_valid = $validator->validate([
+    'field_name' => 'value'
+]);
+```
+
+Default error message: `The {field_name} field must be greater than or equal to {int} characters.`
+
+### numeric
+
+Determines that a value is numeric based on PHP's `is_numeric` function. The value can be a string, as long as it can be cast to a numerical value.
+
+```php
+use Validator\Validator;
+
+$is_valid = (new Validator)
+    ->numeric('field_name', $value = 23)
+    ->validate();
+```
+
+or
+
+```php
+use Validator\Validator;
+
+$validator = new Validator([
+    'field_name' => 'numeric'
+]);
+
+$is_valid = $validator->validate([
+    'field_name' => 23
+]);
+```
+
+Default error message: `The {field_name} field must be a numeric value.`
+
+### email
+
+Determines that a value is a valid email address.
+
+```php
+use Validator\Validator;
+
+$is_valid = (new Validator)
+    ->email('field_name', 'value@example.com')
+    ->validate();
+```
+
+or
+
+```php
+use Validator\Validator;
+
+$validator = new Validator([
+    'field_name' => 'email'
+]);
+
+$is_valid = $validator->validate([
+    'field_name' => 'value@example.com'
+]);
+```
+
+Default error message: `The {field_name} field must be a valid email.`
+
+### boolean
+
+Determines that a value is `true`, `false`, `0`, `1`, `"0"`, or `"1"`.
+
+```php
+use Validator\Validator;
+
+$is_valid = (new Validator)
+    ->boolean('field_name', $value = true)
+    ->validate();
+```
+
+or
+
+```php
+use Validator\Validator;
+
+$validator = new Validator([
+    'field_name' => 'boolean'
+]);
+
+$is_valid = $validator->validate([
+    'field_name' => true
+]);
+```
+
+Default error message: `The {field_name} field must be a boolean value.`
+
+### date
+
+Determines that a value can be parsed by PHP's `strtotime` function.
+
+```php
+use Validator\Validator;
+
+$is_valid = (new Validator)
+    ->date('field_name', $value = '2018-07-24 03:30:24')
+    ->validate();
+```
+
+or
+
+```php
+use Validator\Validator;
+
+$validator = new Validator([
+    'field_name' => 'date'
+]);
+
+$is_valid = $validator->validate([
+    'field_name' => '2018-07-24 03:30:24'
+]);
+```
+
+Default error message: `The {field_name} field is not a valid date.`
