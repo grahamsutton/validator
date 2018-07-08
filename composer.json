@@ -1,6 +1,6 @@
 {
     "name": "grahamsutton/validator",
-    "description": "A simple and extensible PHP validation library.",
+    "description": "A simple PHP validation library.",
     "type": "library",
     "authors": [
         {
