@@ -18,6 +18,16 @@ $ composer require grahamsutton/validator
 **Available Rules**
 
 * [required](#required)
+* [max](#max)
+* [min](#min)
+* [numeric](#numeric)
+* [email](#email)
+* [boolean](#boolean)
+* [accepted](#accepted)
+* [array](#array)
+* [date](#date)
+* [afterDate](#afterDate)
+* [beforeDate](#beforeDate)
 
 ## Two Ways to Use It
 
@@ -176,7 +186,7 @@ $validator->getErrors();
 ## Available Rules
 
 <a name="required">
-### required
+<h3>required</h3>
 </a>
 
 Validates that value is not empty and the field is present.
@@ -205,7 +215,9 @@ $is_valid = $validator->validate([
 
 Default error message: `The {field_name} field is required.`
 
-### max:*int*
+<a name="max">
+<h3>max:<em>int</em></h3>
+</a>
 
 Determines the max value or string length that a field can have.
 
@@ -237,7 +249,9 @@ $is_valid = $validator->validate([
 
 Default error message: `The {field_name} field must be less than or equal to {int} characters.`
 
-### min:*int*
+<a name="min">
+<h3>min:<em>int</em></h3>
+</a>
 
 Determines the minimum value or string length that a field can have.
 
@@ -269,7 +283,9 @@ $is_valid = $validator->validate([
 
 Default error message: `The {field_name} field must be greater than or equal to {int} characters.`
 
-### numeric
+<a name="numeric">
+<h3>numeric</h3>
+</a>
 
 Determines that a value is numeric based on PHP's `is_numeric` function. The value can be a string, as long as it can be cast to a numerical value.
 
@@ -297,7 +313,9 @@ $is_valid = $validator->validate([
 
 Default error message: `The {field_name} field must be a numeric value.`
 
-### email
+<a name="email">
+<h3>email</h3>
+</a>
 
 Determines that a value is a valid email address.
 
@@ -325,7 +343,9 @@ $is_valid = $validator->validate([
 
 Default error message: `The {field_name} field must be a valid email.`
 
-### boolean
+<a name="boolean">
+<h3>boolean</h3>
+</a>
 
 Determines that a value is `true`, `false`, `0`, `1`, `"0"`, or `"1"`.
 
@@ -353,7 +373,9 @@ $is_valid = $validator->validate([
 
 Default error message: `The {field_name} field must be a boolean value.`
 
-### accepted
+<a name="accepted">
+<h3>accepted</h3>
+</a>
 
 Determines that a value is `true`, `1`, `"1"`, or `"yes"`. This is useful for ensuring that people accept things like terms and conditions for your site. This validation will fail if provided a false value. 
 
@@ -383,7 +405,9 @@ $is_valid = $validator->validate([
 
 Default error message: `The {field_name} field must be accepted.`
 
-### array
+<a name="array">
+<h3>array</h3>
+</a>
 
 Determines that a value is an array. Internally, it uses PHP's `is_array` function to determine its truthiness. Empty arrays are considered valid. Add a `required` validation to disallow empty arrays.
 
@@ -411,7 +435,9 @@ $is_valid = $validator->validate([
 
 Default error message: `The {field_name} field must be an array.`
 
-### date
+<a name="date">
+<h3>date</h3>
+</a>
 
 Determines that a value can be parsed by PHP's `strtotime` function.
 
@@ -439,7 +465,10 @@ $is_valid = $validator->validate([
 
 Default error message: `The {field_name} field is not a valid date.`
 
-### afterDate:*string*
+<a name="afterDate">
+<h3>afterDate:<em>string</em></h3>
+</a>
+
 
 Determines if a value is after the specified date. The *string* parameter can be any value that can be parsed by PHP's `strtotime` function.
 
@@ -467,7 +496,9 @@ $is_valid = $validator->validate([
 
 Default error message: `The {field_name} field value must be after {after_date} (yyyy-mm-dd hh:mm:ss).`
 
-### beforeDate:*string*
+<a name="beforeDate">
+<h3>beforeDate:<em>string</em></h3>
+</a>
 
 Determines if a value is before the specified date. The *string* parameter can be any value that can be parsed by PHP's `strtotime` function.
 
