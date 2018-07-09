@@ -348,3 +348,7 @@ $is_valid = $validator->validate([
 ```
 
 Default error message: `The {field_name} field is not a valid date.`
+
+
+## License
+Validator is licensed under the MIT License - see the LICENSE file for details.
