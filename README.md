@@ -15,6 +15,10 @@ To install, run the following in your project root:
 $ composer require grahamsutton/validator
 ```
 
+**Available Rules**
+
+* [required](#required)
+
 ## Two Ways to Use It
 
 There are two ways to perform validations:
@@ -34,7 +38,7 @@ $is_valid = (new Validator())
     ->min('fav_color', 'green', 3)
     ->max('state', 'FL', 2)
     ->date('birthday', '1980-01-01')
-    ->array('fav_nums'  , ['value1', 'value2'])
+    ->array('fav_nums', [7, 4, 92])
     ->accepted('terms', true)
     ->afterDate('start_date', '2018-05-24', '2018-01-31')
     ->beforeDate('end_date', '2024-05-24', '2218-01-31')
@@ -171,7 +175,9 @@ $validator->getErrors();
 
 ## Available Rules
 
+<a name="required">
 ### required
+</a>
 
 Validates that value is not empty and the field is present.
 
