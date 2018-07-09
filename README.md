@@ -4,6 +4,8 @@ The validator is a simple PHP validation library to remove the hassle of creatin
 
 This library is intended to be lightweight (no dependencies!) and easy-to-use.
 
+[![Build Status](https://travis-ci.org/grahamsutton/validator.svg?branch=master)](https://travis-ci.org/grahamsutton/validator)
+
 Requirements:
 * PHP 7.1 and higher
 
