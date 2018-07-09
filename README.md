@@ -21,7 +21,7 @@ There are two ways to perform validations:
 
 **Chain Methods**
 
-Use chain methods if you want to perform validations with at most one rule per field.
+You can chain validation methods together if you want to perform validations...
 
 ```php
 use Validator\Validator;
@@ -30,10 +30,14 @@ $is_valid = (new Validator())
     ->required('name', 'Graham')
     ->numeric('age', 33)
     ->email('email', 'grahamsutton2@gmail.com')
-    ->boolean('accepted_terms', true)
+    ->boolean('likes_dinos', true)
     ->min('fav_color', 'green', 3)
     ->max('state', 'FL', 2)
     ->date('birthday', '1980-01-01')
+    ->array('fav_nums'  , ['value1', 'value2'])
+    ->accepted('terms', true)
+    ->afterDate('start_date', '2018-05-24', '2018-01-31')
+    ->beforeDate('end_date', '2024-05-24', '2218-01-31')
     ->validate();
 ```
 
@@ -47,19 +51,27 @@ Use can use pipe formatting the same way you do in Laravel if you want to perfor
 use Validator\Validator;
 
 $validator = new Validator([
-    'name'       => 'required|min:3|max:15',
-    'age'        => 'required|numeric',
-    'email'      => 'required|email',
-    'accepted'   => 'required|boolean',
-    'date'       => 'required|date'
+    'name'        => 'required|min:3|max:15',
+    'age'         => 'required|numeric',
+    'email'       => 'required|email',
+    'likes_dinos' => 'required|boolean',
+    'date'        => 'required|date',
+    'fav_nums'    => 'required|array',
+    'terms'       => 'accepted',
+    'start_date'  => 'required|afterDate:2018-01-31',
+    'end_date'    => 'required|beforeDate:2218-01-31',
 ]);
 
 $is_valid = $validator->validate([
-    'name'       => 'someone',
-    'age'        => 23,
-    'email'      => 'someone@example.com',
-    'accepted'   => true,
-    'date'       => '2018-02-18 23:00:00'
+    'name'        => 'someone',
+    'age'         => 23,
+    'email'       => 'someone@example.com',
+    'likes_dinos' => true,
+    'date'        => '2018-02-18 23:00:00',
+    'fav_nums'    => [7, 4, 92],
+    'terms'       => true,
+    'start_date'  => '2018-05-24',
+    'end_date'    => '2024-05-24',
 ]));
 ```
 
@@ -77,31 +89,43 @@ This will return a flat associative array, where the key is the name of the fail
 use Validator\Validator;
 
 $validator = new Validator([
-    'name'       => 'required|min:3|max:15',
-    'age'        => 'required|numeric',
-    'email'      => 'required|email',
-    'accepted'   => 'required|boolean',
-    'date'       => 'required|date'
+    'name'        => 'required|min:3|max:15',
+    'age'         => 'required|numeric',
+    'email'       => 'required|email',
+    'likes_dinos' => 'required|boolean',
+    'date'        => 'required|date',
+    'fav_nums'    => 'required|array',
+    'terms'       => 'accepted',
+    'start_date'  => 'required|afterDate:2018-01-31',
+    'end_date'    => 'required|beforeDate:2218-01-31',
 ]);
 
 // $is_valid will be false
 $is_valid = $validator->validate([
-    'name'       => '',             // invalid
-    'age'        => 'string',        // invalid
-    'email'      => '@example.com',  // invalid
-    'accepted'   => 12,              // invalid
-    'date'       => 'incorrect'      // invalid
+    'name'        => '',                     // invalid
+    'age'         => 'string',               // invalid
+    'email'       => '@example.com',         // invalid
+    'accepted'    => 12,                     // invalid
+    'date'        => 'incorrect'             // invalid
+    'fav_nums'    => 'should be an array',  // invalid  
+    'terms'       => false,                 // invalid
+    'start_date'  => '2017-05-24',          // invalid
+    'end_date'    => '2324-05-24',          // invalid
 ]));
 
 $validator->getErrors();
 
 // Returns:
 // [
-//     'name'     => 'The name field is required.',
-//     'age'      => 'The age field must be a numeric value.',
-//     'email'    => 'The email field must be a valid email.',
-//     'accepted' => 'The accepted field must be a boolean value.',
-//     'date'     => 'The date field is not a valid date.'
+//     'name'        => 'The name field is required.',
+//     'age'         => 'The age field must be a numeric value.',
+//     'email'       => 'The email field must be a valid email.',
+//     'likes_dinos' => 'The likes_dinos field must be a boolean value.',
+//     'date'        => 'The date field is not a valid date.',
+//     'fav_nums'    => 'The fav_nums field must be an array.',
+//     'terms'       => 'The terms field must be accepted.',
+//     'start_date'  => 'The start_date field value must be after 2018-01-31 00:01:00 (yyyy-mm-dd hh:mm:ss).',
+//     'end_date'    => 'The end_date field value must be before 2218-01-31 00:01:00 (yyyy-mm-dd hh:mm:ss).',
 // ]
 ```
 
@@ -123,7 +147,7 @@ $validator = new Validator([
 
 // $is_valid will be false
 $is_valid = $validator->validate([
-    'name'       => '',             // invalid
+    'name'       => '',              // invalid
     'age'        => 'string',        // invalid
     'email'      => '@example.com',  // invalid
     'accepted'   => 12,              // invalid
@@ -323,6 +347,64 @@ $is_valid = $validator->validate([
 
 Default error message: `The {field_name} field must be a boolean value.`
 
+### accepted
+
+Determines that a value is `true`, `1`, `"1"`, or `"yes"`. This is useful for ensuring that people accept things like terms and conditions for your site. This validation will fail if provided a false value. 
+
+`"yes"` will be parsed to lowercase when provided, just in case you provide it capitalized.
+
+```php
+use Validator\Validator;
+
+$is_valid = (new Validator)
+    ->accepted('field_name', $value = true)
+    ->validate();
+```
+
+or
+
+```php
+use Validator\Validator;
+
+$validator = new Validator([
+    'field_name' => 'accepted'
+]);
+
+$is_valid = $validator->validate([
+    'field_name' => true
+]);
+```
+
+Default error message: `The {field_name} field must be accepted.`
+
+### array
+
+Determines that a value is an array. Internally, it uses PHP's `is_array` function to determine its truthiness. Empty arrays are considered valid. Add a `required` validation to disallow empty arrays.
+
+```php
+use Validator\Validator;
+
+$is_valid = (new Validator)
+    ->array('field_name', $value = ['value1', 'value2'])
+    ->validate();
+```
+
+or
+
+```php
+use Validator\Validator;
+
+$validator = new Validator([
+    'field_name' => 'array'
+]);
+
+$is_valid = $validator->validate([
+    'field_name' => ['value1', 'value2']
+]);
+```
+
+Default error message: `The {field_name} field must be an array.`
+
 ### date
 
 Determines that a value can be parsed by PHP's `strtotime` function.
@@ -351,6 +433,61 @@ $is_valid = $validator->validate([
 
 Default error message: `The {field_name} field is not a valid date.`
 
+### afterDate:*string*
+
+Determines if a value is after the specified date. The *string* parameter can be any value that can be parsed by PHP's `strtotime` function.
+
+```php
+use Validator\Validator;
+
+$is_valid = (new Validator)
+    ->afterDate('field_name', $value = '2018-07-25 03:30:24', $after_date = '2018-07-24 00:00:00')
+    ->validate();
+```
+
+or
+
+```php
+use Validator\Validator;
+
+$validator = new Validator([
+    'field_name' => 'afterDate:2018-07-24 00:00:00'
+]);
+
+$is_valid = $validator->validate([
+    'field_name' => '2018-07-25 03:30:24'
+]);
+```
+
+Default error message: `The {field_name} field value must be after {after_date} (yyyy-mm-dd hh:mm:ss).`
+
+### beforeDate:*string*
+
+Determines if a value is before the specified date. The *string* parameter can be any value that can be parsed by PHP's `strtotime` function.
+
+```php
+use Validator\Validator;
+
+$is_valid = (new Validator)
+    ->beforeDate('field_name', $value = '2018-07-24 03:30:24', $before_date = '2018-07-25 00:00:00')
+    ->validate();
+```
+
+or
+
+```php
+use Validator\Validator;
+
+$validator = new Validator([
+    'field_name' => 'beforeDate:2018-07-25 00:00:00'
+]);
+
+$is_valid = $validator->validate([
+    'field_name' => '2018-07-24 03:30:24'
+]);
+```
+
+Default error message: `The {field_name} field value must be before {before_date} (yyyy-mm-dd hh:mm:ss).`
 
 ## License
 Validator is licensed under the MIT License - see the LICENSE file for details.

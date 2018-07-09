@@ -90,6 +90,50 @@ class ValidatorTest extends TestCase
     /**
      * @group Validator
      */
+    public function testArrayMethodCanBeCalledCorrectly()
+    {
+        $validator = new Validator();
+        $validator->array('array', ['value1', 'value2']);
+
+        $this->assertTrue($validator->validate());
+    }
+
+    /**
+     * @group Validator
+     */
+    public function testAcceptedMethodCanBeCalledCorrectly()
+    {
+        $validator = new Validator();
+        $validator->accepted('accepted', true);
+
+        $this->assertTrue($validator->validate());
+    }
+
+    /**
+     * @group Validator
+     */
+    public function testBeforeDateMethodCanBeCalledCorrectly()
+    {
+        $validator = new Validator();
+        $validator->beforeDate('start_date', '2018-01-01', '3000-01-01');
+
+        $this->assertTrue($validator->validate());
+    }
+
+    /**
+     * @group Validator
+     */
+    public function testAfterDateMethodCanBeCalledCorrectly()
+    {
+        $validator = new Validator();
+        $validator->afterDate('end_date', '3000-01-01', '2018-01-01');
+
+        $this->assertTrue($validator->validate());
+    }
+
+    /**
+     * @group Validator
+     */
     public function testValidationMethodsCanBeChained()
     {
         $validator = new Validator();
@@ -120,16 +164,24 @@ class ValidatorTest extends TestCase
             'name'       => 'required|min:3|max:15',
             'age'        => 'required|numeric',
             'email'      => 'required|email',
-            'accepted'   => 'required|boolean',
-            'date'       => 'required|date'
+            'boolean'    => 'required|boolean',
+            'date'       => 'required|date',
+            'checkboxes' => 'required|array',
+            'accepted'   => 'required|accepted',
+            'before'     => 'required|beforeDate:2018-01-02',
+            'after'      => 'required|afterDate:2018-01-01',
         ]);
 
         $this->assertTrue($validator->validate([
             'name'       => 'someone',
             'age'        => 23,
             'email'      => 'someone@example.com',
+            'boolean'    => false,
+            'date'       => '2018-02-18 23:00:00',
+            'checkboxes' => ['value1', 'value2'],
             'accepted'   => true,
-            'date'       => '2018-02-18 23:00:00'
+            'before'     => '2018-01-01',
+            'after'      => '2018-01-02',
         ]));
     }
 
@@ -340,6 +392,137 @@ class ValidatorTest extends TestCase
 
         $this->assertFalse($validator->validate([
             'name' => 'something'
+        ]));
+    }
+
+    /**
+     * @group Validator
+     */
+    public function testArrayValidationPipeReturnsTrueWhenFieldIsValid()
+    {
+        $validator = new Validator([
+            'name' => 'array',
+        ]);
+
+        $this->assertTrue($validator->validate([
+            'name' => ['value1', 'value2']
+        ]));
+    }
+
+    /**
+     * @group Validator
+     */
+    public function testArrayValidationPipeReturnsFalseWhenFieldIsInvalid()
+    {
+        $validator = new Validator([
+            'name' => 'array',
+        ]);
+
+        $this->assertFalse($validator->validate([
+            'name' => 123
+        ]));
+    }
+
+    /**
+     * @group Validator
+     */
+    public function testValidationPipeReturnsFalseWhenArrayFieldIsRequiredButIsEmpty()
+    {
+        $validator = new Validator([
+            'name' => 'required|array',
+        ]);
+
+        $this->assertFalse($validator->validate([
+            'name' => []
+        ]));
+
+        $error_messages = $validator->getAllErrors();
+
+        $this->assertCount(1, $error_messages['name']);
+        $this->assertEquals('The name field is required.', $error_messages['name'][0]);
+    }
+
+    /**
+     * @group Validator
+     */
+    public function testAcceptedValidationPipeReturnsTrueWhenFieldIsTrue()
+    {
+        $validator = new Validator([
+            'name' => 'accepted',
+        ]);
+
+        $this->assertTrue($validator->validate([
+            'name' => true
+        ]));
+    }
+
+    /**
+     * @group Validator
+     */
+    public function testAcceptedValidationPipeReturnsFalseWhenFieldIsInvalid()
+    {
+        $validator = new Validator([
+            'name' => 'accepted',
+        ]);
+
+        $this->assertFalse($validator->validate([
+            'name' => 123
+        ]));
+    }
+
+    /**
+     * @group Validator
+     */
+    public function testBeforeDateValidationPipeReturnsTrueWhenFieldIsTrue()
+    {
+        $validator = new Validator([
+            'date' => 'beforeDate:2018-01-02',
+        ]);
+
+        $this->assertTrue($validator->validate([
+            'date' => '2018-01-01'
+        ]));
+    }
+
+    /**
+     * @group Validator
+     */
+    public function testBeforeDateValidationPipeReturnsFalseWhenFieldIsInvalid()
+    {
+        $validator = new Validator([
+            'date' => 'beforeDate:2018-01-01',
+        ]);
+
+        $this->assertFalse($validator->validate([
+            'date' => '2018-01-02'
+        ]));
+    }
+
+    /**
+     * @group Validator
+     */
+    public function testAfterDateValidationPipeReturnsTrueWhenFieldIsTrue()
+    {
+        $validator = new Validator([
+            'date' => 'afterDate:2018-01-01',
+        ]);
+
+        $this->assertTrue($validator->validate([
+            'date' => '2018-01-02'
+        ]));
+    }
+
+    /**
+     * @group Validator
+     */
+    public function testAfterDateValidationPipeReturnsFalseWhenFieldIsInvalid()
+    {
+        $validator = new Validator([
+            'date' => 'afterDate:2018-01-02',
+        ]);
+
+        $this->assertFalse($validator->validate([
+            'date' => '2018-01-01'
         ]));
     }
 }
