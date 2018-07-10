@@ -331,7 +331,7 @@ Default error message: `The {field_name} field must be an integer.`
 <h3>float</h3>
 </a>
 
-Determines that a value is an integer based on PHP's `is_float` function.
+Determines that a value is a float based on PHP's `is_float` function.
 
 ```php
 use Validator\Validator;
