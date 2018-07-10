@@ -182,7 +182,7 @@ $is_valid = $validator->validate([
     'date'       => 'incorrect'      // invalid
 ]));
 
-$validator->getErrors();
+$validator->getAllErrors();
 
 // Returns:
 // [
