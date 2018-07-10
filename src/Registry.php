@@ -15,6 +15,8 @@ class Registry
         'required'   => \Validator\Validations\Required::class,
         'max'        => \Validator\Validations\MaxLength::class,
         'min'        => \Validator\Validations\MinLength::class,
+        'int'        => \Validator\Validations\Integer::class,
+        'float'      => \Validator\Validations\FloatVal::class,
         'boolean'    => \Validator\Validations\Boolean::class,
         'numeric'    => \Validator\Validations\Numeric::class,
         'email'      => \Validator\Validations\Email::class,

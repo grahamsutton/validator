@@ -20,6 +20,8 @@ $ composer require grahamsutton/validator
 * [required](#required)
 * [max](#max)
 * [min](#min)
+* [int](#int)
+* [float](#float)
 * [numeric](#numeric)
 * [email](#email)
 * [boolean](#boolean)
@@ -44,6 +46,8 @@ $is_valid = (new Validator())
     ->required('name', 'Graham')
     ->numeric('age', 33)
     ->email('email', 'grahamsutton2@gmail.com')
+    ->int('total', 123)
+    ->float('amount', 123.45)
     ->boolean('likes_dinos', true)
     ->min('fav_color', 'green', 3)
     ->max('state', 'FL', 2)
@@ -68,6 +72,8 @@ $validator = new Validator([
     'name'        => 'required|min:3|max:15',
     'age'         => 'required|numeric',
     'email'       => 'required|email',
+    'total'       => 'required|int',
+    'amount'      => 'required|float'
     'likes_dinos' => 'required|boolean',
     'date'        => 'required|date',
     'fav_nums'    => 'required|array',
@@ -80,6 +86,8 @@ $is_valid = $validator->validate([
     'name'        => 'someone',
     'age'         => 23,
     'email'       => 'someone@example.com',
+    'total'       => 123,
+    'amount'      => 123.45,
     'likes_dinos' => true,
     'date'        => '2018-02-18 23:00:00',
     'fav_nums'    => [7, 4, 92],
@@ -106,6 +114,8 @@ $validator = new Validator([
     'name'        => 'required|min:3|max:15',
     'age'         => 'required|numeric',
     'email'       => 'required|email',
+    'total'       => 'required|int',
+    'amount'      => 'required|float'
     'likes_dinos' => 'required|boolean',
     'date'        => 'required|date',
     'fav_nums'    => 'required|array',
@@ -119,12 +129,14 @@ $is_valid = $validator->validate([
     'name'        => '',                     // invalid
     'age'         => 'string',               // invalid
     'email'       => '@example.com',         // invalid
-    'accepted'    => 12,                     // invalid
+    'total'       => 123.45,                 // invalid
+    'amount'      => 123,                    // invalid
+    'likes_dinos' => 12,                     // invalid
     'date'        => 'incorrect'             // invalid
-    'fav_nums'    => 'should be an array',  // invalid  
-    'terms'       => false,                 // invalid
-    'start_date'  => '2017-05-24',          // invalid
-    'end_date'    => '2324-05-24',          // invalid
+    'fav_nums'    => 'should be an array',   // invalid  
+    'terms'       => false,                  // invalid
+    'start_date'  => '2017-05-24',           // invalid
+    'end_date'    => '2324-05-24',           // invalid
 ]));
 
 $validator->getErrors();
@@ -134,6 +146,8 @@ $validator->getErrors();
 //     'name'        => 'The name field is required.',
 //     'age'         => 'The age field must be a numeric value.',
 //     'email'       => 'The email field must be a valid email.',
+//     'total'       => 'The total field must be an integer.',
+//     'amount'      => 'The amount field must be a float.',
 //     'likes_dinos' => 'The likes_dinos field must be a boolean value.',
 //     'date'        => 'The date field is not a valid date.',
 //     'fav_nums'    => 'The fav_nums field must be an array.',
@@ -282,6 +296,66 @@ $is_valid = $validator->validate([
 ```
 
 Default error message: `The {field_name} field must be greater than or equal to {int} characters.`
+
+<a name="int">
+<h3>int</h3>
+</a>
+
+Determines that a value is an integer based on PHP's `is_int` function.
+
+```php
+use Validator\Validator;
+
+$is_valid = (new Validator)
+    ->int('field_name', $value = 123)
+    ->validate();
+```
+
+or
+
+```php
+use Validator\Validator;
+
+$validator = new Validator([
+    'field_name' => 'int'
+]);
+
+$is_valid = $validator->validate([
+    'field_name' => 123
+]);
+```
+
+Default error message: `The {field_name} field must be an integer.`
+
+<a name="float">
+<h3>float</h3>
+</a>
+
+Determines that a value is an integer based on PHP's `is_float` function.
+
+```php
+use Validator\Validator;
+
+$is_valid = (new Validator)
+    ->float('field_name', $value = 123.45)
+    ->validate();
+```
+
+or
+
+```php
+use Validator\Validator;
+
+$validator = new Validator([
+    'field_name' => 'float'
+]);
+
+$is_valid = $validator->validate([
+    'field_name' => 123.45
+]);
+```
+
+Default error message: `The {field_name} field must be an float.`
 
 <a name="numeric">
 <h3>numeric</h3>

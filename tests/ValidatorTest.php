@@ -134,6 +134,28 @@ class ValidatorTest extends TestCase
     /**
      * @group Validator
      */
+    public function testIntegerMethodCanBeCalledCorrectly()
+    {
+        $validator = new Validator();
+        $validator->int('amount', 123);
+
+        $this->assertTrue($validator->validate());
+    }
+
+    /**
+     * @group Validator
+     */
+    public function testFloatMethodCanBeCalledCorrectly()
+    {
+        $validator = new Validator();
+        $validator->float('amount', 123.45);
+
+        $this->assertTrue($validator->validate());
+    }
+
+    /**
+     * @group Validator
+     */
     public function testValidationMethodsCanBeChained()
     {
         $validator = new Validator();
@@ -165,6 +187,8 @@ class ValidatorTest extends TestCase
             'age'        => 'required|numeric',
             'email'      => 'required|email',
             'boolean'    => 'required|boolean',
+            'total'      => 'required|int',
+            'amount'     => 'required|float',
             'date'       => 'required|date',
             'checkboxes' => 'required|array',
             'accepted'   => 'required|accepted',
@@ -177,6 +201,8 @@ class ValidatorTest extends TestCase
             'age'        => 23,
             'email'      => 'someone@example.com',
             'boolean'    => false,
+            'total'      => 345,
+            'amount'     => 345.56,
             'date'       => '2018-02-18 23:00:00',
             'checkboxes' => ['value1', 'value2'],
             'accepted'   => true,
@@ -523,6 +549,62 @@ class ValidatorTest extends TestCase
 
         $this->assertFalse($validator->validate([
             'date' => '2018-01-01'
+        ]));
+    }
+
+    /**
+     * @group Validator
+     */
+    public function testIntegerValidationPipeReturnsTrueWhenFieldIsValid()
+    {
+        $validator = new Validator([
+            'amount' => 'int',
+        ]);
+
+        $this->assertTrue($validator->validate([
+            'amount' => 345
+        ]));
+    }
+
+    /**
+     * @group Validator
+     */
+    public function testIntegerValidationPipeReturnsFalseWhenFieldIsInvalid()
+    {
+        $validator = new Validator([
+            'amount' => 'int',
+        ]);
+
+        $this->assertFalse($validator->validate([
+            'amount' => 'incorrect'
+        ]));
+    }
+
+    /**
+     * @group Validator
+     */
+    public function testFloatValidationPipeReturnsTrueWhenFieldIsValid()
+    {
+        $validator = new Validator([
+            'amount' => 'float',
+        ]);
+
+        $this->assertTrue($validator->validate([
+            'amount' => 345.56
+        ]));
+    }
+
+    /**
+     * @group Validator
+     */
+    public function testFloatValidationPipeReturnsFalseWhenFieldIsInvalid()
+    {
+        $validator = new Validator([
+            'amount' => 'float',
+        ]);
+
+        $this->assertFalse($validator->validate([
+            'amount' => 'incorrect'
         ]));
     }
 }
